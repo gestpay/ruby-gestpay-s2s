@@ -76,13 +76,35 @@ module Gestpay
       response.body.dig(:call_verifycard_s2_s_response, :call_verifycard_s2_s_result, :gest_pay_s2_s)
     end
 
-    def check_shop_login(request)
-      raise 'request object is null' if request.nil?
-      check_not_null request, :shop_login
+    def call_check_carta_s2s(request)
+      check_shop_login request
+      check_not_null request, :shop_transaction_id
+      check_not_null request, :with_auth
+
+      response = @client.call(:call_check_carta_s2_s, message: request)
+      response.body.dig(:call_check_carta_s2_s_response, :call_check_carta_s2_s_result, :gest_pay_s2_s)
+    end
+
+    def call_request_token_s2s(request)
+      check_shop_login request
+      check_not_null request, :request_token
+      check_not_null request, :card_number
+      check_not_null request, :expiry_month
+      check_not_null request, :expiry_year
+      check_not_null request, :cvv
+      check_not_null request, :with_auth
+
+      response = @client.call(:call_request_token_s2_s, message: request)
+      response.body.dig(:call_request_token_s2_s_response, :call_request_token_s2_s_result, :gest_pay_s2_s)
     end
 
 
     private
+
+    def check_shop_login(request)
+      raise 'request object is null' if request.nil?
+      check_not_null request, :shop_login
+    end
 
     def check_not_null(request, symbol)
       raise "request[:#{symbol.to_s}] is null" if request[symbol].nil?
