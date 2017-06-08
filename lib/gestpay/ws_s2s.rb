@@ -98,6 +98,14 @@ module Gestpay
       response.body.dig(:call_request_token_s2_s_response, :call_request_token_s2_s_result, :gest_pay_s2_s)
     end
 
+    def call_delete_token_s2s(request)
+      check_shop_login request
+      check_not_null request, :token_value
+
+      response = @client.call(:call_delete_token_s2_s, message: request)
+      response.body.dig(:call_delete_token_s2_s_response, :call_delete_token_s2_s_result, :gest_pay_s2_s)
+    end
+
 
     private
 
