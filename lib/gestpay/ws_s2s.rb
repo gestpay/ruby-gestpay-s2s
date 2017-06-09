@@ -141,6 +141,13 @@ module Gestpay
       response.body.dig(:call_update_order_s2_s_response, :call_update_order_s2_s_result, :gest_pay_s2_s)
     end
 
+    def call_exchange_rate_s2s(request)
+      check_shop_login request
+
+      response = @client.call(:call_exchange_rate_s2_s, message: request)
+      response.body.dig(:call_exchange_rate_s2_s_response, :call_exchange_rate_s2_s_result, :gest_pay_s2_s)
+    end
+
     private
     def check_shop_login(request)
       raise 'request object is null' if request.nil?
