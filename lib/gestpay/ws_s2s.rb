@@ -107,7 +107,7 @@ module Gestpay
 
     def call_update_token_s2s(request)
       check_shop_login request
-      check_not_null request, :token_value
+      check_not_null request, :token
       check_not_null request, :expiry_month
       check_not_null request, :expiry_year
       check_not_null request, :with_aut
