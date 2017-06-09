@@ -124,6 +124,23 @@ module Gestpay
       response.body.dig(:call_ideal_list_s2_s_response, :call_ideal_list_s2_s_result, :call_ideal_list_s2_s_response, :call_ideal_list_s2_s_result, :gest_pay_s2_s)
     end
 
+    def call_my_bank_list_s2s(request)
+      check_shop_login request
+      check_not_null request, :language_id
+
+      response = @client.call(:call_my_bank_list_s2_s, message: request)
+      response.body.dig(:call_my_bank_list_s2_s_response, :call_my_bank_list_s2_s_result, :call_my_bank_s2_s_response, :call_my_bank_s2_s_result, :gest_pay_s2_s)
+    end
+
+    def call_update_order_s2s(request)
+      check_shop_login request
+      check_shop_or_bank_transaction_id_not_null(request, :shop_transaction_id, :bank_transaction_id)
+      check_not_null request, :order_details
+
+      response = @client.call(:call_update_order_s2_s, message: request)
+      response.body.dig(:call_update_order_s2_s_response, :call_update_order_s2_s_result, :gest_pay_s2_s)
+    end
+
     private
     def check_shop_login(request)
       raise 'request object is null' if request.nil?
