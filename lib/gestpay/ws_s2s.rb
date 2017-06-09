@@ -36,7 +36,6 @@ module Gestpay
       response.body.dig(:call_settle_s2_s_response, :call_settle_s2_s_result, :gest_pay_s2_s)
     end
 
-
     def call_delete_s2s(request)
       check_shop_login(request)
       check_shop_or_bank_transaction_id_not_null(request, :shop_transaction_id, :bank_transaction_id)
@@ -106,9 +105,26 @@ module Gestpay
       response.body.dig(:call_delete_token_s2_s_response, :call_delete_token_s2_s_result, :gest_pay_s2_s)
     end
 
+    def call_update_token_s2s(request)
+      check_shop_login request
+      check_not_null request, :token_value
+      check_not_null request, :expiry_month
+      check_not_null request, :expiry_year
+      check_not_null request, :with_aut
+
+      response = @client.call(:call_update_token_s2_s, message: request)
+      response.body.dig(:call_update_token_s2_s_response, :call_update_token_s2_s_result, :gest_pay_s2_s)
+    end
+
+    def call_ideal_list_s2s(request)
+      check_shop_login request
+
+      response = @client.call(:call_ideal_list_s2_s, message: request)
+
+      response.body.dig(:call_ideal_list_s2_s_response, :call_ideal_list_s2_s_result, :call_ideal_list_s2_s_response, :call_ideal_list_s2_s_result, :gest_pay_s2_s)
+    end
 
     private
-
     def check_shop_login(request)
       raise 'request object is null' if request.nil?
       check_not_null request, :shop_login
@@ -117,7 +133,6 @@ module Gestpay
     def check_not_null(request, symbol)
       raise "request[:#{symbol.to_s}] is null" if request[symbol].nil?
     end
-
 
     def check_shop_or_bank_transaction_id_not_null(request, symbol1, symbol2)
       raise "one of #{symbol1.to_s} or #{symbol2.to_s} must be provided" if request[symbol1].nil? && request[symbol2].nil?
